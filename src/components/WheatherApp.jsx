@@ -17,7 +17,6 @@ const WheatherApp = () => {
 
   const handleInputChanges = (e) => {
       setLocation(e.target.value)
-      console.log(location)
   }
 
   const handleKeyDown = (e) => {
@@ -106,8 +105,6 @@ const WheatherApp = () => {
     ].join(',')
 
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=${currentFields}&timezone=auto`
-
-    console.log('Fetching weather data from URL:', url)
 
     const response = await fetch(url)
 
