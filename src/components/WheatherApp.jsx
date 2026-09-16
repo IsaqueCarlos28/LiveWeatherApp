@@ -1,9 +1,11 @@
 import sunny from '../assets/images/sunny.png'
 import { useState } from 'react'
+import { getWeatherInfo } from '../utils/weatherCode'
 import './WheatherApp.css'
 
 const WheatherApp = () => {
     const [location, setLocation] = useState('')
+    const [data, setData] = useState(null)
 
     const handleInputChanges = (e) => {
         setLocation(e.target.value)
