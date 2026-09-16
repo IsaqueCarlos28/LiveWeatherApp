@@ -6,6 +6,7 @@ import loadingGif from '../assets/images/loading.gif'
 
 import { useState } from 'react'
 import { getWeatherInfo } from '../utils/weatherCode'
+import { formatDate } from '../utils/formatDate'
 
 import './WheatherApp.css'
 
@@ -115,20 +116,6 @@ const WheatherApp = () => {
     const result = await response.json()
 
     return result.current
-  }
-
-  const formatDate = (dateTime) => {
-    if (!dateTime) {
-      return ''
-    }
-
-    const date = new Date(dateTime)
-
-    return new Intl.DateTimeFormat('pt-BR', {
-      weekday: 'short',
-      day: '2-digit',
-      month: 'short'
-    }).format(date)
   }
 
   const weatherImages = {
