@@ -3,14 +3,17 @@ import cloudy from '../assets/images/cloudy.png'
 import rainy from '../assets/images/rainy.png'
 import snowy from '../assets/images/snowy.png'
 import loadingGif from '../assets/images/loading.gif'
+
 import { useState } from 'react'
 import { getWeatherInfo } from '../utils/weatherCode'
+
 import './WheatherApp.css'
 
 const WheatherApp = () => {
   const [location, setLocation] = useState('')
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const handleInputChanges = (e) => {
       setLocation(e.target.value)
@@ -24,41 +27,49 @@ const WheatherApp = () => {
   }
 
   const search = async (city) => {
-  const normalizedCity = city.trim()
+    const normalizedCity = city.trim()
 
-  if (!normalizedCity) {
-    return
-  }
-
-  try {
-    setLoading(true)
-
-    const coordinates = await getCoordinates(normalizedCity)
-
-    if (!coordinates) {
+    if (!normalizedCity) {
+      setError('Enter a city name')
       return
     }
 
-    const currentWeather = await getWeather(
-      coordinates.latitude,
-      coordinates.longitude
-    )
+    try {
+      setLoading(true)
+      setError('')
 
-    setData({
-      city: coordinates.name,
-      country: coordinates.country,
-      temperature: currentWeather.temperature_2m,
-      humidity: currentWeather.relative_humidity_2m,
-      windSpeed: currentWeather.wind_speed_10m,
-      weatherCode: currentWeather.weather_code,
-      time: currentWeather.time
-    })
-  } catch (error) {
-    console.error(error)
-  } finally {
-    setLoading(false)
+      const coordinates = await getCoordinates(normalizedCity)
+
+      if (!coordinates) {
+        setError('City not found')
+        setData(null)
+        return
+      }
+
+      const currentWeather = await getWeather(
+        coordinates.latitude,
+        coordinates.longitude
+      )
+
+      setData({
+        city: coordinates.name,
+        country: coordinates.country,
+        temperature: currentWeather.temperature_2m,
+        humidity: currentWeather.relative_humidity_2m,
+        windSpeed: currentWeather.wind_speed_10m,
+        weatherCode: currentWeather.weather_code,
+        time: currentWeather.time
+      })
+
+      setLocation('')
+    } catch (err) {
+      console.error(err)
+      setError('Unable to load weather data')
+      setData(null)
+    } finally {
+      setLoading(false)
+    }
   }
-}
 
   const getCoordinates = async (city) => {
     const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`
@@ -169,7 +180,9 @@ const WheatherApp = () => {
             <img src={loadingGif} alt="Loading weather" className="loading-gif" />
             <span>Loading...</span>
           </div>
-        ) : (
+        ) : error ? (
+          <div className="not-found">{error}</div>
+        ) : data ? (
           <>
             <div className="weather">
               <img
@@ -206,7 +219,7 @@ const WheatherApp = () => {
               </div>
             </div>
           </>
-        )}
+        ): null }
       </div>
     </div>
   )
