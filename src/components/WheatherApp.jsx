@@ -2,6 +2,7 @@ import sunny from '../assets/images/sunny.png'
 import cloudy from '../assets/images/cloudy.png'
 import rainy from '../assets/images/rainy.png'
 import snowy from '../assets/images/snowy.png'
+import loadingGif from '../assets/images/loading.gif'
 import { useState } from 'react'
 import { getWeatherInfo } from '../utils/weatherCode'
 import './WheatherApp.css'
@@ -9,6 +10,7 @@ import './WheatherApp.css'
 const WheatherApp = () => {
   const [location, setLocation] = useState('')
   const [data, setData] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   const handleInputChanges = (e) => {
       setLocation(e.target.value)
@@ -22,39 +24,41 @@ const WheatherApp = () => {
   }
 
   const search = async (city) => {
-    const normalizedCity = city.trim()
+  const normalizedCity = city.trim()
 
-    if (!normalizedCity) {
+  if (!normalizedCity) {
+    return
+  }
+
+  try {
+    setLoading(true)
+
+    const coordinates = await getCoordinates(normalizedCity)
+
+    if (!coordinates) {
       return
     }
 
-    try {
-      const coordinates = await getCoordinates(normalizedCity)
+    const currentWeather = await getWeather(
+      coordinates.latitude,
+      coordinates.longitude
+    )
 
-      if (!coordinates) {
-        console.log('City not found')
-        return
-      }
-
-      const currentWeather = await getWeather(
-        coordinates.latitude,
-        coordinates.longitude
-      )
-
-      setData({
-        city: coordinates.name,
-        country: coordinates.country,
-        temperature: currentWeather.temperature_2m,
-        humidity: currentWeather.relative_humidity_2m,
-        windSpeed: currentWeather.wind_speed_10m,
-        weatherCode: currentWeather.weather_code,
-        time: currentWeather.time
-      })
-      console.log('Weather data:', data)
-    } catch (error) {
-      console.error(error)
-    }
+    setData({
+      city: coordinates.name,
+      country: coordinates.country,
+      temperature: currentWeather.temperature_2m,
+      humidity: currentWeather.relative_humidity_2m,
+      windSpeed: currentWeather.wind_speed_10m,
+      weatherCode: currentWeather.weather_code,
+      time: currentWeather.time
+    })
+  } catch (error) {
+    console.error(error)
+  } finally {
+    setLoading(false)
   }
+}
 
   const getCoordinates = async (city) => {
     const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`
@@ -146,52 +150,63 @@ const WheatherApp = () => {
           </div>
 
           <div className="search-bar">
-          <input
-                type="text"
-                placeholder="Enter Location"
-                value={location}
-                onChange={handleInputChanges}
-                onKeyDown={handleKeyDown}
+            <input
+              type="text"
+              placeholder="Enter Location"
+              value={location}
+              onChange={handleInputChanges}
+              onKeyDown={handleKeyDown}
             />
-            <i className="fa-solid fa-magnifying-glass"
-              onClick={() => search(location)}></i>
+            <i
+              className="fa-solid fa-magnifying-glass"
+              onClick={() => search(location)}
+            ></i>
           </div>
         </div>
 
-        <div className="weather">
-          <img 
-            src={weatherImage}
-            alt={weatherInfo?.description || 'Weather'}
-          />
-          <div className="weather-type">
-            {weatherInfo ? weatherInfo.description : '--'}
+        {loading ? (
+          <div className="loading">
+            <img src={loadingGif} alt="Loading weather" className="loading-gif" />
+            <span>Loading...</span>
           </div>
-          <div className="temp">
-            {data ? `${Math.round(data.temperature)}°` : '--'}
-          </div>
-        </div>
-
-        <div className="weather-date">
-          <p>{data ? formatDate(data.time) : '--'}</p>
-        </div>
-
-        <div className="weather-data">
-          <div className="humidity">
-            <div className="data-name">Humidity</div>
-            <i className="fa-solid fa-droplet"></i>
-            <div className="data">
-              {data ? `${data.humidity}%` : '--'}
+        ) : (
+          <>
+            <div className="weather">
+              <img
+                src={weatherImage}
+                alt={weatherInfo?.description || 'Weather'}
+              />
+              <div className="weather-type">
+                {weatherInfo ? weatherInfo.description : '--'}
+              </div>
+              <div className="temp">
+                {data ? `${Math.round(data.temperature)}°` : '--'}
+              </div>
             </div>
-          </div>
 
-          <div className="wind">
-            <div className="data-name">Wind</div>
-            <i className="fa-solid fa-wind"></i>
-            <div className="data">
-              {data ? `${data.windSpeed} km/h` : '--'}
+            <div className="weather-date">
+              <p>{data ? formatDate(data.time) : '--'}</p>
             </div>
-          </div>
-        </div>
+
+            <div className="weather-data">
+              <div className="humidity">
+                <div className="data-name">Humidity</div>
+                <i className="fa-solid fa-droplet"></i>
+                <div className="data">
+                  {data ? `${data.humidity}%` : '--'}
+                </div>
+              </div>
+
+              <div className="wind">
+                <div className="data-name">Wind</div>
+                <i className="fa-solid fa-wind"></i>
+                <div className="data">
+                  {data ? `${data.windSpeed} km/h` : '--'}
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   )
