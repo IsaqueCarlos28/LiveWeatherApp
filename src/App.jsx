@@ -1,9 +1,9 @@
-import WheatherApp from "./components/WheatherApp"
+import WeatherApp from "./components/WeatherApp"
 
 const App = () => {
   return (
     <div>
-      <WheatherApp/>
+      <WeatherApp/>
     </div>
   )
 }

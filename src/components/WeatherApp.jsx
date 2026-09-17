@@ -6,8 +6,9 @@ import NotFound from './NotFound'
 import { getCoordinates, getCurrentWeather } from '../services/weatherApi'
 import { getWeatherInfo } from '../utils/weatherCode'
 import { weatherImages, backgroundImages } from '../constants/weatherTheme'
+import './WeatherApp.css'
 
-const WheatherApp = () => {
+const WeatherApp = () => {
   const [data, setData] = useState(null)
   const [location, setLocation] = useState('')
   const [loading, setLoading] = useState(false)
@@ -110,4 +111,4 @@ const WheatherApp = () => {
   )
 }
 
-export default WheatherApp
+export default WeatherApp
