@@ -6,6 +6,7 @@ import NotFound from './NotFound'
 import { getCoordinates, getCurrentWeather } from '../services/weatherApi'
 import { getWeatherInfo } from '../utils/weatherCode'
 import { weatherImages, backgroundImages } from '../constants/weatherTheme'
+import loadingGif from '../assets/images/loading.gif'
 import './WeatherApp.css'
 
 const WeatherApp = () => {
@@ -93,7 +94,10 @@ const WeatherApp = () => {
         />
 
         {loading ? (
-          <div className="loading">Loading...</div>
+           <div className="loading">
+            <img src={loadingGif} alt="Loading weather" className="loading-gif" />
+            <span>Loading...</span>
+          </div>
         ) : error ? (
           <NotFound message={error} />
         ) : data ? (
