@@ -1,16 +1,80 @@
-# React + Vite
+# LiveWeatherApp
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A small React weather app that searches for a city and displays the current weather conditions, including temperature, humidity, wind speed, date, and a matching weather illustration.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Search for a city by name
+- Show current temperature
+- Display humidity and wind speed
+- Show the weather description and a dynamic weather image
+- Handle invalid city names with a friendly error message
+- Show a loading state while the request is in progress
+- Built with React and Vite
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React
+- Vite
+- Open-Meteo API for geocoding and weather data
+- CSS for layout and styling
 
-## Expanding the ESLint configuration
+## Project Structure
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+src/
+  App.jsx
+  components/
+    SearchBar.jsx
+    WeatherApp.jsx
+    WeatherCard.jsx
+    WeatherDetails.jsx
+    NotFound.jsx
+  constants/
+    weatherTheme.js
+  services/
+    weatherApi.js
+  utils/
+    weatherCode.js
+  index.css
+  main.jsx
+```
+
+## How it works
+
+The app uses the Open-Meteo APIs:
+
+1. It searches for the city using the geocoding API.
+2. It gets the latitude and longitude of the selected city.
+3. It fetches the current weather data for those coordinates.
+4. It maps the WMO weather code to a human-readable description and visual theme.
+
+## Getting started
+
+### Install dependencies
+
+```bash
+npm install
+```
+
+### Run the app locally
+
+```bash
+npm run dev
+```
+
+Then open the local URL shown in the terminal, usually:
+
+```bash
+http://localhost:5173/
+```
+
+## Build for production
+
+```bash
+npm run build
+```
+
+## Notes
+
+This project is a simple front-end weather dashboard designed to practice React state management, API integration, conditional rendering, and responsive UI design.
