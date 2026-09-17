@@ -1,13 +1,10 @@
-import sunny from '../assets/images/sunny.png'
-import cloudy from '../assets/images/cloudy.png'
-import rainy from '../assets/images/rainy.png'
-import snowy from '../assets/images/snowy.png'
 import loadingGif from '../assets/images/loading.gif'
 
 import { useState } from 'react'
 import { getWeatherInfo } from '../utils/weatherCode'
 import { formatDate } from '../utils/formatDate'
 import {getCoordinates,getCurrentWeather} from '../services/weatherApi'
+import {weatherImages,backgroundImages} from '../constants/weatherTheme'
 
 import './WheatherApp.css'
 
@@ -70,13 +67,6 @@ const WheatherApp = () => {
     } finally {
       setLoading(false)
     }
-  }
-
-  const weatherImages = {
-    sunny,
-    cloudy,
-    rainy,
-    snowy
   }
 
   const weatherInfo = data
