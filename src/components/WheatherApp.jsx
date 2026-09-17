@@ -5,6 +5,7 @@ import { getWeatherInfo } from '../utils/weatherCode'
 import { formatDate } from '../utils/formatDate'
 import {getCoordinates,getCurrentWeather} from '../services/weatherApi'
 import {weatherImages,backgroundImages} from '../constants/weatherTheme'
+import SearchBar from './SearchBar'
 
 import './WheatherApp.css'
 
@@ -88,19 +89,13 @@ const WheatherApp = () => {
             </div>
           </div>
 
-          <div className="search-bar">
-            <input
-              type="text"
-              placeholder="Enter Location"
-              value={location}
-              onChange={handleInputChanges}
-              onKeyDown={handleKeyDown}
-            />
-            <i
-              className="fa-solid fa-magnifying-glass"
-              onClick={() => search(location)}
-            ></i>
-          </div>
+          <SearchBar
+            location={location}
+            handleInputChanges={handleInputChanges}
+            handleKeyDown={handleKeyDown}
+            search={search}
+            city={data?.city}
+          />
         </div>
 
         {loading ? (
