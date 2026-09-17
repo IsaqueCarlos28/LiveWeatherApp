@@ -2,10 +2,10 @@ import loadingGif from '../assets/images/loading.gif'
 
 import { useState } from 'react'
 import { getWeatherInfo } from '../utils/weatherCode'
-import { formatDate } from '../utils/formatDate'
 import {getCoordinates,getCurrentWeather} from '../services/weatherApi'
 import {weatherImages,backgroundImages} from '../constants/weatherTheme'
 import SearchBar from './SearchBar'
+import WeatherCard from './WeatherCard'
 
 import './WheatherApp.css'
 
@@ -106,42 +106,11 @@ const WheatherApp = () => {
         ) : error ? (
           <div className="not-found">{error}</div>
         ) : data ? (
-          <>
-            <div className="weather">
-              <img
-                src={weatherImage}
-                alt={weatherInfo?.description || 'Weather'}
-              />
-              <div className="weather-type">
-                {weatherInfo ? weatherInfo.description : '--'}
-              </div>
-              <div className="temp">
-                {data ? `${Math.round(data.temperature)}°` : '--'}
-              </div>
-            </div>
-
-            <div className="weather-date">
-              <p>{data ? formatDate(data.time) : '--'}</p>
-            </div>
-
-            <div className="weather-data">
-              <div className="humidity">
-                <div className="data-name">Humidity</div>
-                <i className="fa-solid fa-droplet"></i>
-                <div className="data">
-                  {data ? `${data.humidity}%` : '--'}
-                </div>
-              </div>
-
-              <div className="wind">
-                <div className="data-name">Wind</div>
-                <i className="fa-solid fa-wind"></i>
-                <div className="data">
-                  {data ? `${data.windSpeed} km/h` : '--'}
-                </div>
-              </div>
-            </div>
-          </>
+          <WeatherCard
+            data={data}
+            weatherInfo={weatherInfo}
+            weatherImage={weatherImage}
+          />
         ): null }
       </div>
     </div>
